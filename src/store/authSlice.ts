@@ -1,7 +1,7 @@
 // store/authSlice.ts
 import { createSlice, createAsyncThunk, type PayloadAction } from "@reduxjs/toolkit";
 import type { AppDispatch } from "./index";
-import api from "@/lib/axios";
+import axios from "axios";
 
 interface User {
   id: string;
@@ -20,13 +20,19 @@ const initialState: AuthState = {
 };
 
 // Create typed thunk with proper dispatch type
+// store/authSlice.ts
 export const logoutUser = createAsyncThunk<void, void, { dispatch: AppDispatch }>(
   "auth/logout",
   async (_, { dispatch }) => {
     try {
-      await api.post("/auth/logout");
+      // Use a separate instance to avoid interceptor
+      const plainApi = axios.create({
+        baseURL: "http://localhost:8080",
+        withCredentials: true,
+      });
+      await plainApi.post("/auth/logout");
     } catch (err) {
-      console.error("Logout failed", err);
+      console.error("Logout API failed", err);
     } finally {
       dispatch(logout());
     }

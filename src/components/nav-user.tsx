@@ -5,6 +5,7 @@ import {
   Bell,
   ChevronsUpDown,
   CreditCard,
+  Loader2,
   LogOut,
   Sparkles,
 } from "lucide-react"
@@ -29,6 +30,10 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
+import { useAppDispatch } from "@/store/hooks"
+import { useNavigate } from "react-router"
+import { logoutUser } from "@/store/authSlice"
+import { useState } from "react"
 
 export function NavUser({
   user,
@@ -39,6 +44,25 @@ export function NavUser({
   }
 }) {
   const { isMobile } = useSidebar()
+  const dispatch = useAppDispatch() ; 
+  const navigate = useNavigate() ; 
+
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  
+  const handleLogout = async () => {
+    setIsLoggingOut(true);
+    try {
+      // Dispatch logout action
+      await dispatch(logoutUser());
+      // Redirect after successful logout
+      navigate("/login", { replace: true });
+    } catch (error) {
+      console.error("Logout failed:", error);
+    } finally {
+      setIsLoggingOut(false);
+    }
+  };
+
 
   return (
     <SidebarMenu>
@@ -101,10 +125,19 @@ export function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <LogOut />
-              Log out
-            </DropdownMenuItem>
+            <DropdownMenuItem onClick={handleLogout} disabled={isLoggingOut}>
+            {isLoggingOut ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Logging out...
+              </>
+            ) : (
+              <>
+                <LogOut className="mr-2 h-4 w-4" />
+                Log out
+              </>
+            )}
+          </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>

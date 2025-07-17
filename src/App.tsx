@@ -1,5 +1,5 @@
 // src/App.tsx
-import { BrowserRouter, Routes, Route, Navigate } from "react-router";
+import { BrowserRouter, Routes, Route } from "react-router";
 import { User } from "lucide-react";
 import { MainLayout } from "./layouts/MainLayout";
 import Login from "./auth-screens/login";
@@ -19,9 +19,9 @@ const userData = {
 const adminData = {
   teams: [{ name: "Acme Corp", id: "1" }],
   navMain: [
-    { name: "UserDashboard", url: "/user/dashboard", icon: User },
-    { name: "Inventory", url: "/user/inventory", icon: User },
-    { name: "Contractors", url: "/user/contractors", icon: User },
+    { name: "UserDashboard", url: "/admin/dashboard", icon: User },
+    { name: "Inventory", url: "/admin/inventory", icon: User },
+    { name: "Contractors", url: "/admin/contractors", icon: User },
   ],
   user: { name: "Jane Doe", email: "work.dhruvilrana@gmail.com" },
 };
@@ -48,8 +48,8 @@ export default function App() {
               path="admin/dashboard"
               element={<div>Admin Dashboadfard</div>}
             />
-            <Route path="admin/inventory" element={<div>User Management</div>} />
-            <Route path="admin/contractors" element={<div>System Settings</div>} />
+            <Route path="admin/inventory" element={<div>Inventiry</div>} />
+            <Route path="admin/contractors" element={<div>Contractors</div>} />
           </Route>
         </Route>
 

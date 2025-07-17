@@ -1,57 +1,60 @@
 // src/App.tsx
-import { BrowserRouter, Routes, Route } from "react-router";
-import {User} from "lucide-react"
+import { BrowserRouter, Routes, Route, Navigate } from "react-router";
+import { User } from "lucide-react";
 import { MainLayout } from "./layouts/MainLayout";
-// import { AuthLayout } from "./layouts/AuthLayout";
+import Login from "./auth-screens/login";
+import { HomeRedirect } from "./components/home-redirect";
+import { ProtectedRoute } from "./components/protected-routes";
 
-// pages
-// import Home from "./pages/Home";
-// import About from "./pages/About";
-// import Login from "./pages/Login";
-// import Register from "./pages/Register";
-// import ConcertsHome from "./pages/concerts/ConcertsHome";
-// import City from "./pages/concerts/City";
-// import Trending from "./pages/concerts/Trending";
-
-// mock user data for sidebar
 const userData = {
   teams: [{ name: "Acme Corp", id: "1" }],
   navMain: [
     { name: "UserDashboard", url: "/user/dashboard", icon: User },
-    { name: "Inventory", url: "/user/inventory", icon : User },
+    { name: "Inventory", url: "/user/inventory", icon: User },
     { name: "Contractors", url: "/user/contractors", icon: User },
   ],
-  user: { name: "Jane Doe", email : "work.dhruvilrana@gmail.com"},
+  user: { name: "Jane Doe", email: "work.dhruvilrana@gmail .com" },
+};
+
+const adminData = {
+  teams: [{ name: "Acme Corp", id: "1" }],
+  navMain: [
+    { name: "UserDashboard", url: "/user/dashboard", icon: User },
+    { name: "Inventory", url: "/user/inventory", icon: User },
+    { name: "Contractors", url: "/user/contractors", icon: User },
+  ],
+  user: { name: "Jane Doe", email: "work.dhruvilrana@gmail.com" },
 };
 
 export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Public */}
-        {/* <Route path="/" element={<Home />} />
-        <Route path="about" element={<About />} /> */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/" element={<HomeRedirect />} />
 
-        {/* Auth routes */}
-        {/* <Route element={<AuthLayout />}>
-          <Route path="login" element={<Login />} />
-          <Route path="register" element={<Register />} />
-        </Route> */}
-
-        {/* App (with sidebar) */}
-        <Route path = "" element={<MainLayout userData={userData} />}>
-          {/* example user routes */}
-          <Route path="user/dashboard" element={<div>User Dashboard</div>} />
-          <Route path="user/inventory" element={<div>Inventory</div>} />
-          <Route path="user/contractors" element={<div>Contractors</div>} />
-
-          {/* concerts example */}
-          {/* <Route path="concerts">
-            <Route index element={<ConcertsHome />} />
-            <Route path=":city" element={<City />} />
-            <Route path="trending" element={<Trending />} />
-          </Route> */}
+        {/* User Routes */}
+        <Route element={<ProtectedRoute allowedRoles={["user"]} />}>
+          <Route element={<MainLayout userData={userData} />}>
+            <Route path="user/dashboard" element={<div>User Dashboard</div>} />
+            <Route path="user/inventory" element={<div>Inventory</div>} />
+            <Route path="user/contractors" element={<div>Contractors</div>} />
+          </Route>
         </Route>
+
+        <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
+          <Route element={<MainLayout userData={adminData} />}>
+            <Route
+              path="admin/dashboard"
+              element={<div>Admin Dashboadfard</div>}
+            />
+            <Route path="admin/inventory" element={<div>User Management</div>} />
+            <Route path="admin/contractors" element={<div>System Settings</div>} />
+          </Route>
+        </Route>
+
+        {/* Catch-all route */}
+        <Route path="*" element={<div>404 - Page Not Found</div>} />
       </Routes>
     </BrowserRouter>
   );

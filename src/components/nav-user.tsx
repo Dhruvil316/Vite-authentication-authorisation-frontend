@@ -34,6 +34,7 @@ import { useAppDispatch } from "@/store/hooks"
 import { useNavigate } from "react-router"
 import { logoutUser } from "@/store/authSlice"
 import { useState } from "react"
+import { resetQueue } from "@/lib/refreshQueue"
 
 export function NavUser({
   user,
@@ -53,6 +54,7 @@ export function NavUser({
     setIsLoggingOut(true);
     try {
       // Dispatch logout action
+      resetQueue();
       await dispatch(logoutUser());
       // Redirect after successful logout
       navigate("/login", { replace: true });

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useAppDispatch } from "@/store/hooks";
-import { useNavigate, useLocation } from "react-router";
+import { useNavigate } from "react-router";
 import api from "@/lib/axios";
 import { Eye, EyeOff } from "lucide-react";
 
